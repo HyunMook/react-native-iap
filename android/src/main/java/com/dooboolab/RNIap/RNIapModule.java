@@ -234,8 +234,14 @@ public class RNIapModule extends ReactContextBaseJavaModule {
 
             for (SkuDetails skuDetails : skuDetailsList) {
               BigDecimal priceAmountMicros = new BigDecimal(skuDetails.getPriceAmountMicros());
-              BigDecimal introductoryPriceAmountMicros = new BigDecimal(skuDetails.getIntroductoryPriceAmountMicros());
               BigDecimal microsUnit = new BigDecimal(1000000);
+              String introductoryPriceOrig = "";
+              if(skuDetails.getIntroductoryPriceAmountMicros() != "") {
+                BigDecimal introductoryPriceAmountMicros = new BigDecimal(skuDetails.getIntroductoryPriceAmountMicros());
+                introductoryPriceOrig = introductoryPriceAmountMicros.divide(microsUnit, 2, BigDecimal.ROUND_UP).toString();
+              } else {
+                introductoryPriceOrig = skuDetails.getIntroductoryPriceAmountMicros();
+              }
 
               WritableMap item = Arguments.createMap();
               item.putString("productId", skuDetails.getSku());
@@ -246,7 +252,7 @@ public class RNIapModule extends ReactContextBaseJavaModule {
               item.putString("title", skuDetails.getTitle());
               item.putString("description", skuDetails.getDescription());
               item.putString("introductoryPrice", skuDetails.getIntroductoryPrice());
-              item.putString("introductoryPriceOrig", introductoryPriceAmountMicros.divide(microsUnit, 2, BigDecimal.ROUND_UP).toString());
+              item.putString("introductoryPriceOrig", introductoryPriceOrig);
               item.putString("subscriptionPeriodAndroid", skuDetails.getSubscriptionPeriod());
               item.putString("freeTrialPeriodAndroid", skuDetails.getFreeTrialPeriod());
               item.putString("introductoryPriceCyclesAndroid", skuDetails.getIntroductoryPriceCycles());
