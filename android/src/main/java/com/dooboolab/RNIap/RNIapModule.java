@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import java.math.BigDecimal;
+
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -231,15 +233,26 @@ public class RNIapModule extends ReactContextBaseJavaModule {
             WritableArray items = Arguments.createArray();
 
             for (SkuDetails skuDetails : skuDetailsList) {
+              BigDecimal priceAmountMicros = new BigDecimal(skuDetails.getPriceAmountMicros());
+              BigDecimal microsUnit = new BigDecimal(1000000);
+              String introductoryPriceOrig = "";
+              if(skuDetails.getIntroductoryPriceAmountMicros() != "") {
+                BigDecimal introductoryPriceAmountMicros = new BigDecimal(skuDetails.getIntroductoryPriceAmountMicros());
+                introductoryPriceOrig = introductoryPriceAmountMicros.divide(microsUnit, 2, BigDecimal.ROUND_UP).toString();
+              } else {
+                introductoryPriceOrig = skuDetails.getIntroductoryPriceAmountMicros();
+              }
+
               WritableMap item = Arguments.createMap();
               item.putString("productId", skuDetails.getSku());
-              item.putString("price", String.format("%.02f", skuDetails.getPriceAmountMicros() / 1000000f));
+              item.putString("price", priceAmountMicros.divide(microsUnit, 2, BigDecimal.ROUND_UP).toString());
               item.putString("currency", skuDetails.getPriceCurrencyCode());
               item.putString("type", skuDetails.getType());
               item.putString("localizedPrice", skuDetails.getPrice());
               item.putString("title", skuDetails.getTitle());
               item.putString("description", skuDetails.getDescription());
               item.putString("introductoryPrice", skuDetails.getIntroductoryPrice());
+              item.putString("introductoryPriceOrig", introductoryPriceOrig);
               item.putString("subscriptionPeriodAndroid", skuDetails.getSubscriptionPeriod());
               item.putString("freeTrialPeriodAndroid", skuDetails.getFreeTrialPeriod());
               item.putString("introductoryPriceCyclesAndroid", skuDetails.getIntroductoryPriceCycles());

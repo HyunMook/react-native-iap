@@ -372,6 +372,7 @@ RCT_EXPORT_METHOD(buyPromotedProduct:(RCTPromiseResolveBlock)resolve
 	
   NSString* localizedPrice = [formatter stringFromNumber:product.price];
   NSString* introductoryPrice = localizedPrice;
+  NSString* introductoryPriceOrig = [product.price stringValue];
 	
   NSString* introductoryPricePaymentMode = @"";
   NSString* introductoryPriceNumberOfPeriods = @"";
@@ -407,6 +408,7 @@ RCT_EXPORT_METHOD(buyPromotedProduct:(RCTPromiseResolveBlock)resolve
       //SKProductDiscount introductoryPriceObj = product.introductoryPrice;
       formatter.locale = product.introductoryPrice.priceLocale;
       introductoryPrice = [formatter stringFromNumber:product.introductoryPrice.price];
+      introductoryPriceOrig = [product.introductoryPrice.price stringValue];
       
       switch (product.introductoryPrice.paymentMode) {
         case SKProductDiscountPaymentModeFreeTrial:
@@ -439,6 +441,7 @@ RCT_EXPORT_METHOD(buyPromotedProduct:(RCTPromiseResolveBlock)resolve
       
     } else {
       introductoryPrice = @"";
+      introductoryPriceOrig = @"";
       introductoryPricePaymentMode = @"";
       introductoryPriceNumberOfPeriods = @"";
       introductoryPriceSubscriptionPeriod = @"";
@@ -460,6 +463,7 @@ RCT_EXPORT_METHOD(buyPromotedProduct:(RCTPromiseResolveBlock)resolve
      periodNumberIOS, @"subscriptionPeriodNumberIOS",
      periodUnitIOS, @"subscriptionPeriodUnitIOS",
      introductoryPrice, @"introductoryPrice",
+     introductoryPriceOrig, @"introductoryPriceOrig",
      introductoryPricePaymentMode, @"introductoryPricePaymentModeIOS",
      introductoryPriceNumberOfPeriods, @"introductoryPriceNumberOfPeriodsIOS",
      introductoryPriceSubscriptionPeriod, @"introductoryPriceSubscriptionPeriodIOS",
